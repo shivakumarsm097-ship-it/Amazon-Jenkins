@@ -1,0 +1,25 @@
+@Library('shared-lib@v1.0') _
+
+pipeline {
+    agent any
+    stages {
+        stage('Hello') {
+            steps {
+                sayHello 'Shiva'
+            }
+        }
+        stage('Build') {
+            steps {
+                buildApp goal: 'clean install'
+            }
+        }
+    }
+    post {
+        success {
+            notifyBuild status: 'SUCCESS', team: 'amazon-team'
+        }
+        failure {
+            notifyBuild status: 'FAILED', team: 'amazon-team'
+        }
+    }
+}
